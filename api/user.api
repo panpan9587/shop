@@ -1,0 +1,165 @@
+syntax = "v1"
+
+info(
+	title: "type title here"
+	desc: "type desc here"
+	author: "type author here"
+	email: "type email here"
+	version: "type version here"
+)
+
+type (
+	//TODO：简写接收返回req，
+	//TODO: 忘记密码，发送短信，
+	UserCaptchaReq {
+		//TODO:验证手机号是否存在，因为短信是要钱的，所以先验证手机号，调用发送验证码
+		Mobile string `form:"mobile"`
+	}
+	ForgetPasswordReq {
+		//TODO:接收验证码验证，验证无误更改密码
+		Mobile      string `form:"mobile"`
+		Captcha     string `form:"captcha"`
+		UserId      int64  `form:"userId"`
+		NewPassword string `form:"newPassword"`
+	}
+	//TODO: 登录
+	LoginUserReq {
+		Username string `form:"username"`
+		Password string `form:"password"`
+	}
+	//TODO:中间件
+
+	//TODO:绑定手机号
+	BindMobileReq {
+		UserId int64  `form:"userId"`
+		Mobile string `form:"mobile"`
+	}
+	//TODO：实名人证
+	IdentityUserReq {
+		UserId   int64  `form:"userId"`
+		RealName string `form:"realName"`
+		CardNo   string `form:"cardNo"`
+	}
+	//TODO:发布商品
+	RelaseGoodsReq {
+		GoodsTitle  string  `form:"goodsTitle"`
+		GoodsPrice  float64 `form:"goodsPrice"`
+		GoodsStock  int64   `form:"goodsStock"`
+		GoodsStatus int64   `form:"goodsStatus"`
+	}
+	//TODO:查看商品详情
+	GetGoodsInfoReq {
+		GoodsId int64 `form:"goodsId"`
+	}
+	//TODO:购物车添加
+	AddShoppingCartReq {
+		UserId     int64   `form:"userId"`
+		GoodsId    int64   `form:"goodsId"`
+		GoodsPrice float64 `form:"goodsPrice"`
+		GoodsNum   int64   `form:"goodsNum"`
+	}
+	//TODO:移除购物车商品
+	DeleteShoppingCartReq {
+		ShopId int64 `form:"shopId"`
+	}
+	//TODO:清空购物车，计算商品总价格和总数量
+	RemoveAllShoppingCartReq {
+		UserId int64 `form:"userId"`
+	}
+
+	//TODO:创建订单,api层生成唯一订单
+	CreateOrderReq {
+		UserId      int64   `form:"userId"`
+		GoodsId     int64   `form:"goodsId"`
+		GoodsNum    int64   `form:"goodsNum"`
+		TotalPrice  float64 `form:"totalPrice"`
+		PayType     int64   `form:"payType"`
+		OrderStatus int64   `form:"orderStatus"`
+		RealName    string  `form:"realName"`
+		Addr        string  `form:"addr"`
+	}
+	//TODO:支付路由
+	AlipayReq {
+		OrderId int64 `form:"orderId"`
+	}
+
+	//TODO:支付回调（进空，反空）
+	PayNotifyReq {
+	}
+
+	PayNotifyResp {
+	}
+
+	//TODO:统一返回响应
+	Response {
+		Code    int64                  `json:"code"`
+		Message string                 `json:"message"`
+		Data    map[string]interface{} `json:"data"`
+	}
+)
+service User {
+	//验证码
+	@handler UserCaptcha // TODO: replace handler name and delete this comment
+	post /users/captcha (UserCaptchaReq) returns (Response)
+	//忘记密码
+	@handler ForgetPassword // TODO: replace handler name and delete this comment
+	post /users/forget/password (ForgetPasswordReq) returns (Response)
+	//登录
+	@handler LoginUser // TODO: replace handler name and delete this comment
+	post /users/login (LoginUserReq) returns (Response)
+
+	//TODO:支付回调
+	@doc "支付回调"
+	@handler PayNotify // TODO: replace handler name and delete this comment
+	post /pay/notify (PayNotifyReq) returns (PayNotifyResp)
+}
+
+@server(
+	middleware:AuthToken
+)
+service User {
+	//登陆后绑定手机号
+	@doc "登陆后绑定手机号"
+	@handler BindMobile // TODO: replace handler name and delete this comment
+	post /users/bind/mobile (BindMobileReq) returns (Response)
+	//实名认证
+	@doc "实名认证"
+	@handler IdentityUser // TODO: replace handler name and delete this comment
+	post /users/identity (IdentityUserReq) returns (Response)
+	//发布商品
+	@doc "发布商品"
+	@handler ReleaseGoods // TODO: replace handler name and delete this comment
+	post /goods/release (RelaseGoodsReq) returns (Response)
+
+	//查看商品详情
+	@doc "查看商品详情"
+	@handler GetGoodsInfo // TODO: replace handler name and delete this comment
+	post /goods/getinfo (GetGoodsInfoReq) returns (Response)
+
+	//添加购物车
+	@doc "添加购物车"
+	@handler AddShoppingCart // TODO: replace handler name and delete this comment
+	post /shoppingcart/addshop (AddShoppingCartReq) returns (Response)
+
+	//移除购物车商品
+	@doc "移除购物车商品"
+	@handler DeleteShoppingCart // TODO: replace handler name and delete this comment
+	post /shoppingcart/deleteshop (DeleteShoppingCartReq) returns (Response)
+
+	//TODO:清空购物车，计算商品总价格和总数量
+
+	@doc "清空购物车"
+	@handler RemoveAllShoppingCart // TODO: replace handler name and delete this comment
+	post /shoppingcart/remove/all (RemoveAllShoppingCartReq) returns (Response)
+
+	//TODO:创建订单,api层生成唯一订单
+	@doc "创建订单"
+	@handler CreateOrder // TODO: replace handler name and delete this comment
+	post /order/create (CreateOrderReq) returns (Response)
+
+	//TODO:支付接口，返回支付url，点击可以跳转支付
+	@doc "支付宝支付"
+	@handler Alipay // TODO: replace handler name and delete this comment
+	post /pay/alipay (AlipayReq) returns (Response)
+
+}

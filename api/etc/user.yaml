@@ -1,0 +1,38 @@
+Name: User
+Host: 0.0.0.0
+Port: 8888
+
+Sms:
+  AccessKeyID: LTAI5t7jEwDerCkQCFsMNz9p
+  AccessKeySecret: TfshPdncF2iVXVVUhNQZj6lmP6a4Mo
+
+User:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.user-srv
+
+Goods:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: goods.rpc
+
+ShoppingCart:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: shoppingcart.rpc
+
+Order:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: order.rpc
+
+AuthToken:
+  AccessSecret: "panpan"
+  AccessExpire: 86400
+
+
+

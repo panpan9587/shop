@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package order;
+option go_package="./order";
+//创建订单
+message CreateOrderRequest {
+  int64 UserId = 1;
+  string OrderSn = 2;
+  int64 GoodsId = 3;
+  int64 GoodsNum=4;
+  double TotalPrice = 5;
+  int64 PayType = 6;
+  int64 OrderStatus = 7;
+  string RealName = 8;
+  string Addr = 9;
+}
+
+message CreateOrderResponse {
+  int64 OrderId = 1;
+}
+
+
+//支付
+message AliPayRequest {
+  int64 OrderId = 1;
+}
+
+message AliPayResponse {
+  string payURL = 1;
+}
+
+//支付
+message UpdateOrderStatusRequest {
+  string OrderSn = 1;
+  int64 Status=2;
+}
+
+message UpdateOrderStatusResponse {
+  bool pong = 1;
+}
+
+
+service Order {
+  //创建订单
+  rpc CreateOrder(CreateOrderRequest) returns(CreateOrderResponse);
+  //修改订单状态
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns(UpdateOrderStatusResponse);
+  //支付，返回支付宝付款地址
+  rpc AliPay(AliPayRequest) returns(AliPayResponse);
+}

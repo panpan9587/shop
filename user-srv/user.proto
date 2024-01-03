@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package user;
+option go_package="./user";
+
+message GetUserRequest {
+  //使用手机号来查，优势，手机号带有索引和唯一，提高查询效率
+  string Mobile = 1;
+}
+
+message GetUserResponse {
+  int64 UserId = 1;
+}
+
+message UpdateUserPwdRequest {
+  int64 UserId=1;
+  string NewPassword=2;
+}
+
+message UpdateUserPwdResponse {
+   bool pong =1;
+}
+
+message LoginUserRequest {
+    string Username =1;
+    string Password =2;
+}
+
+message LoginUserResponse {
+    //登录成功返回userId
+    int64 UserId =1;
+}
+//绑定手机号
+message BindMobileRequest {
+  int64 UserId=1;
+  string Mobile=2;
+}
+
+message BindMobileResponse {
+    //登录成功返回userId
+    bool pong=1;
+}
+//实名认证
+message IdentityUserRequest {
+  int64 UserId=1;
+  string RealName=2;
+  string CardNo=3;
+}
+
+message IdentityUserResponse {
+
+  bool pong=1;
+}
+
+service User {
+  //查询用户是否存在
+  rpc GetUser(GetUserRequest) returns(GetUserResponse);
+  //修改用户密码
+  rpc UpdateUserPwd(UpdateUserPwdRequest) returns(UpdateUserPwdResponse);
+  //登录接口
+  rpc LoginUser(LoginUserRequest) returns(LoginUserResponse);
+  //绑定手机号
+  rpc BindMobile(BindMobileRequest) returns(BindMobileResponse);
+  //实名认证
+  rpc IdentityUser(IdentityUserRequest) returns(IdentityUserResponse);
+}

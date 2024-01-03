@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package goods;
+option go_package="./goods";
+//商品发布
+message ReleaseGoodsRequest {
+   string GoodsTitle=1;
+   double GoodsPrice=2;
+   int64 GoodsStock=3;
+   int64 GoodsStatus=4;
+}
+//商品详情结构体
+message GoodsInfo{
+  int64 GoodsId=1;
+  string GoodsTitle=2;
+  double GoodsPrice=3;
+  int64 GoodsStock=4;
+  int64 GoodsStatus=5;
+}
+
+message ReleaseGoodsResponse {
+  bool pong=1;
+}
+//查看商品详情
+message GetGoodsInfoRequest {
+  int64 GoodsId=1;
+}
+
+message GetGoodsInfoResponse {
+    GoodsInfo pong =1;
+}
+
+
+service Goods {
+  //发布商品
+  rpc ReleaseGoods(ReleaseGoodsRequest) returns(ReleaseGoodsResponse);
+  //查看商品详情
+  rpc GetGoodsInfo(GetGoodsInfoRequest) returns(GetGoodsInfoResponse);
+
+}

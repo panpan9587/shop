@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package shoppingCart;
+option go_package="./shoppingCart";
+//添加购物车
+message AddShoppingCartRequest {
+    int64 UserId=1;
+    int64 GoodsId=2;
+    double GoodsPrice=3;
+    int64 GoodsNum=4;
+}
+message AddShoppingCartResponse {
+    int64 ShopId=1;
+}
+//移除购物车
+message DeleteShoppingCartRequest {
+   int64 ShopId =1;
+}
+message DeleteShoppingCartResponse {
+    bool pong=1;
+}
+
+//清空购物车，返还总价格和数量，扣减虚拟库存
+message RemoveAllShoppingCartRequest {
+  int64 UserId =1;
+}
+message RemoveAllShoppingCartResponse {
+  double TotalPrice=1;
+  bool pong=2;
+}
+
+
+service ShoppingCart {
+  //添加购物车
+  rpc AddShoppingCart(AddShoppingCartRequest) returns(AddShoppingCartResponse);
+  //移除购物车
+    rpc DeleteShoppingCart(DeleteShoppingCartRequest) returns(DeleteShoppingCartResponse);
+  //清空购物车，计算商品总价格和数量
+  rpc RemoveAllShoppingCart(RemoveAllShoppingCartRequest) returns(RemoveAllShoppingCartResponse);
+
+}
